@@ -19,9 +19,10 @@ export const ActivityDetails: React.FC<RouteComponentProps<DetailParams>> = ({ m
 
   useEffect(() => {
     loadActivity(match.params.id)
-  }, [loadActivity, match.params.id]);
+  }, [loadActivity, match.params.id, history]);
 
-  if (loadingInitial || activity === null) return <LoadingComponent content='Loading activity...' />
+  if (loadingInitial || !activity)
+    return <LoadingComponent content='Loading activity...' />
 
   return (
     <Grid>
