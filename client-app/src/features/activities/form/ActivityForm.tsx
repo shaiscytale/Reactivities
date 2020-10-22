@@ -1,6 +1,6 @@
 import React, { FormEvent, useContext, useEffect, useState } from 'react'
 import { Button, Form, Grid, Segment } from 'semantic-ui-react'
-import { IActivity } from '../../../app/models/activity'
+import { IActivityFormValues } from '../../../app/models/activity'
 import { v4 as uuid } from 'uuid'
 import ActivityStore from '../../../app/stores/activityStore'
 import { observer } from 'mobx-react-lite'
@@ -10,6 +10,7 @@ import TextInput from '../../../app/common/form/TextInput'
 import TextAreaInput from '../../../app/common/form/TextAreaInput'
 import SelectInput from '../../../app/common/form/SelectInput'
 import { category } from '../../../app/common/options/categoryOptions'
+import DateInput from '../../../app/common/form/DateInput'
 
 interface DetailParams {
   id: string;
@@ -25,25 +26,26 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({ match, hist
     loadActivity,
     clearActivity } = activityStore;
 
-  const [activity, setActivity] = useState<IActivity>({
-    id: '',
+  const [activity, setActivity] = useState<IActivityFormValues>({
+    id: undefined,
     title: '',
     category: '',
     description: '',
-    date: '',
+    date: undefined,
+    time: undefined,
     city: '',
     venue: ''
   });
 
   useEffect(() => {
-    if (match.params.id && activity.id.length === 0) {
+    if (match.params.id && activity.id) {
       loadActivity(match.params.id)
         .then(() => initialFormState && setActivity(initialFormState));
     }
     return () => {
       clearActivity();
     }
-  }, [loadActivity, clearActivity, match.params.id, initialFormState, activity.id.length]);
+  }, [loadActivity, clearActivity, match.params.id, initialFormState, activity.id]);
 
   // const handleSubmit = () => {
   //   if (activity.id.length === 0) {
@@ -71,55 +73,65 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({ match, hist
             onSubmit={handleFinalFormSubmit}
             render={({ handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
-                <Field 
-                  name='title' 
-                  placeholder='Title' 
-                  value={activity.title} 
+                <Field
+                  name='title'
+                  placeholder='Title'
+                  value={activity.title}
                   component={TextInput}
                 />
-                <Field 
-                  name='description' 
-                  placeholder='Description' 
-                  value={activity.description} 
+                <Field
+                  name='description'
+                  placeholder='Description'
+                  value={activity.description}
                   component={TextAreaInput}
                   rows={3}
                 />
-                <Field 
-                  name='category' 
-                  placeholder='Category' 
-                  value={activity.category} 
+                <Field
+                  name='category'
+                  placeholder='Category'
+                  value={activity.category}
                   component={SelectInput}
                   options={category}
                 />
+                <Form.Group widths='equal'>
+                  <Field
+                    name='date'
+                    placeholder='Date'
+                    value={activity.date}
+                    component={DateInput}
+                    date={true}
+                  />
+                  <Field
+                    name='time'
+                    placeholder='Time'
+                    value={activity.time}
+                    component={DateInput}
+                    time={true}
+                  />
+                </Form.Group>
                 <Field
-                  name='date' 
-                  placeholder='Date' 
-                  value={activity.date} 
+                  name='city'
+                  placeholder='City'
+                  value={activity.city}
                   component={TextInput}
                 />
-                <Field 
-                  name='city' 
-                  placeholder='City' 
-                  value={activity.city} 
+                <Field
+                  name='venue'
+                  placeholder='Venue'
+                  value={activity.venue}
                   component={TextInput}
                 />
-                <Field 
-                  name='venue' 
-                  placeholder='Venue' 
-                  value={activity.venue} 
-                  component={TextInput}
-                />
-                <Button 
-                  loading={submitting} 
-                  floated='right' 
-                  positive 
-                  type='submit' 
-                  content='Submit' 
+                <Button
+                  loading={submitting}
+                  floated='right'
+                  positive
+                  type='submit'
+                  content='Submit'
                 />
                 <Button
                   floated='right'
                   onClick={() => {
-                    if (activity.id.length > 0)
+                    if (activity.id)
                       history.push(`/activities/${activity.id}`);
                     else
                       history.push('/activities');

@@ -2,7 +2,8 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
 import { Button, Icon, Item, Segment } from 'semantic-ui-react';
 import { IActivity } from '../../../app/models/activity';
-import ActivityStore from '../../../app/stores/activityStore'
+import ActivityStore from '../../../app/stores/activityStore';
+import { format } from 'date-fns';
 
 interface IProps {
   activity: IActivity;
@@ -26,7 +27,7 @@ export const ActivityListItem: React.FC<IProps> = ({ activity }) => {
         </Item.Group>
       </Segment>
       <Segment>
-        <Icon name='clock' />{activity.date}
+        <Icon name='clock' />{format(activity.date, 'h:mm a')}
         <Icon name='marker' />{activity.venue}, {activity.city}
       </Segment>
       <Segment secondary>
