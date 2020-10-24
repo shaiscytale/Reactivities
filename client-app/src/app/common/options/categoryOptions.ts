@@ -1,5 +1,3 @@
-import { SSL_OP_NO_TLSv1_1 } from "constants";
-
 export const category = [
   { key: 'drinks', text: 'Drinks', value: 'drinks' },
   { key: 'culture', text: 'Culture', value: 'culture' },

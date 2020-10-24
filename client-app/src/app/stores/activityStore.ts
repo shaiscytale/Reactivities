@@ -1,5 +1,7 @@
 import { observable, action, computed, configure, runInAction, makeObservable } from "mobx";
 import { createContext, SyntheticEvent } from "react";
+import { toast } from "react-toastify";
+import { history } from "../..";
 import agent from "../api/agent";
 import { IActivity } from "../models/activity";
 
@@ -21,7 +23,6 @@ class ActivityStore {
 
     return Object.entries(sortedActivities.reduce((activities, activity) => {
       const date = activity.date.toISOString().split('T')[0];
-      console.log(date);
       activities[date] = activities[date] ? [...activities[date], activity] : [activity];
       return activities;
     }, {} as {[key: string]: IActivity[]}));
@@ -49,7 +50,8 @@ class ActivityStore {
   @action loadActivity = async (id: string) => {
     let activity = this.getActivity(id);
     if(activity) {
-      this.activity = activity
+      this.activity = activity;
+      return activity;
     } else {
       this.loadingInitial = true;
       try {
@@ -59,6 +61,7 @@ class ActivityStore {
           this.activity = activity;
           this.loadingInitial = false;
         });
+        return activity;
       } catch (error) {
         runInAction(() => {
           this.loadingInitial = false;
@@ -84,11 +87,13 @@ class ActivityStore {
         this.activityRegistry.set(activity.id, activity);
         this.submitting = false;
       });
+      history.push(`/activities/${activity.id}`);
     } catch (error) {
       runInAction(() => {
         this.submitting = false;
       });
-      console.log(error);
+      toast.error('Problem submitting data.')
+      console.log(error.response);
     }
   };
 
@@ -101,11 +106,13 @@ class ActivityStore {
         this.activity = activity;
         this.submitting = false;
       });
+      history.push(`/activities/${activity.id}`);
     } catch(error) {
       runInAction(() => {
         this.submitting = false;
       })
-      console.log(error);
+      toast.error('Problem submitting data.')
+      console.log(error.response);
     }
   };
 

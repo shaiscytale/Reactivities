@@ -1,8 +1,7 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom';
 import { Button, Icon, Item, Segment } from 'semantic-ui-react';
 import { IActivity } from '../../../app/models/activity';
-import ActivityStore from '../../../app/stores/activityStore';
 import { format } from 'date-fns';
 
 interface IProps {
@@ -10,8 +9,6 @@ interface IProps {
 }
 
 export const ActivityListItem: React.FC<IProps> = ({ activity }) => {
-  // const activityStore = useContext(ActivityStore);
-  // const { deleteActivity, submitting, target } = activityStore;
 
   return (
     <Segment.Group>

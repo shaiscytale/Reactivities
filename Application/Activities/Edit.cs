@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Errors;
 using MediatR;
 using Persistence;
+using FluentValidation;
 
 namespace Application.Activities
 {
@@ -27,6 +28,20 @@ namespace Application.Activities
       public Handler(DataContext context)
       {
         _context = context;
+      }
+
+      public class CommandValidator : AbstractValidator<Command>
+      {
+        public CommandValidator()
+        {
+          RuleFor(x => x.Id).NotEmpty();
+          RuleFor(x => x.Title).NotEmpty();
+          RuleFor(x => x.Description).NotEmpty();
+          RuleFor(x => x.Category).NotEmpty();
+          RuleFor(x => x.Date).NotEmpty();
+          RuleFor(x => x.City).NotEmpty();
+          RuleFor(x => x.Venue).NotEmpty();
+        }
       }
       public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
       {
