@@ -1,4 +1,5 @@
 import { action, computed, observable, runInAction } from "mobx";
+import { history } from "../..";
 import agent from "../api/agent";
 import { IUser, IUserFormValues } from "../models/user";
 import { RootStore } from "./rootStore";
@@ -19,8 +20,9 @@ export default class UserStore {
                 this.user = user;
             })
             console.log(user);
-        }catch (error) {
-            console.log(error)
+            history.push('/activities');
+        } catch (error) {
+            throw error;
         }
     }
 }
